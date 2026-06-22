@@ -2,7 +2,11 @@ package br.edu.ifpb.pps.model;
 
 import br.edu.ifpb.pps.enums.CategoriaEvento;
 import br.edu.ifpb.pps.enums.StatusEvento;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Evento {
     private String nome;
     private String cidade;
@@ -16,45 +20,5 @@ public class Evento {
         this.periodo = periodo;
         this.categoriaEvento = categoriaEvento;
         this.statusEvento = StatusEvento.ABERTO;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getPeriodo() {
-        return periodo;
-    }
-
-    public void setPeriodo(String periodo) {
-        this.periodo = periodo;
-    }
-
-    public CategoriaEvento getCategoriaEvento() {
-        return categoriaEvento;
-    }
-
-    public void setCategoriaEvento(CategoriaEvento categoriaEvento) {
-        this.categoriaEvento = categoriaEvento;
-    }
-
-    public StatusEvento getStatusEvento() {
-        return statusEvento;
-    }
-
-    public void setStatusEvento(StatusEvento statusEvento) {
-        this.statusEvento = statusEvento;
     }
 }

@@ -3,6 +3,11 @@ package br.edu.ifpb.pps.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class PerfilRevisor {
     private Pesquisador pesquisador;
     private List<AreaTematica> afinidades = new ArrayList<AreaTematica>();
@@ -15,29 +20,5 @@ public class PerfilRevisor {
     public PerfilRevisor(Pesquisador pesquisador, List<AreaTematica> afinidades) {
         this.pesquisador = pesquisador;
         this.afinidades = afinidades;
-    }
-
-    public Pesquisador getPesquisador() {
-        return pesquisador;
-    }
-
-    public void setPesquisador(Pesquisador pesquisador) {
-        this.pesquisador = pesquisador;
-    }
-
-    public List<AreaTematica> getAfinidades() {
-        return afinidades;
-    }
-
-    public void setAfinidades(List<AreaTematica> afinidades) {
-        this.afinidades = afinidades;
-    }
-
-    public List<Artigo> getArtigosRevisados() {
-        return artigosRevisados;
-    }
-
-    public void setArtigosRevisados(List<Artigo> artigosRevisados) {
-        this.artigosRevisados = artigosRevisados;
     }
 }
