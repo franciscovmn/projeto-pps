@@ -10,6 +10,11 @@ public class StatusArtigoRevisao implements StatusArtigo {
     }
 
     @Override
+    public String getNome() {
+        return "EM_REVISAO";
+    }
+
+    @Override
     public String getParecer() {
         return "nenhum parecer disponível";
     }

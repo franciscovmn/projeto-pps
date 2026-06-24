@@ -11,6 +11,11 @@ public class StatusEventoFechado implements StatusEvento{
     }
 
     @Override
+    public String getNome() {
+        return "FECHADO";
+    }
+
+    @Override
     public void receberArtigo(Artigo artigo){
         //TO-DO: lógica de enviar para os Revisores
     }

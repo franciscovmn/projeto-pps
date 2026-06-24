@@ -11,6 +11,11 @@ public class StatusEventoAberto implements StatusEvento {
     }
 
     @Override
+    public String getNome() {
+        return "ABERTO";
+    }
+
+    @Override
     public void receberArtigo(Artigo artigo){
         System.out.println("TO-DO");
     }

@@ -10,6 +10,11 @@ public class StatusArtigoSubmetido implements StatusArtigo{
     }
 
     @Override
+    public String getNome() {
+        return "SUBMETIDO";
+    }
+
+    @Override
     public String getParecer() {
         return "nenhum parecer disponível";
     }

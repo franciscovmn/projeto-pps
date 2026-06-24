@@ -10,6 +10,11 @@ public class StatusArtigoRejeitado implements StatusArtigo{
     }
 
     @Override
+    public String getNome() {
+        return "REJEITADO";
+    }
+
+    @Override
     public String getParecer() {
         return "TO-DO";
     }
