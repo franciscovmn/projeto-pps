@@ -1,5 +1,8 @@
 # Projeto PPS - Paper Submission Management System 
 
+##### [Trello](https://trello.com/invite/b/6a390b1837afad71e3612e8c/ATTI10c16c12bf4e443c2a9f5eff2028f4beFA30A503/padr%C3%B5es-de-projeto)
+
+
 ## Disciplina
 
 **Padrões de Projeto de Software**
