@@ -6,6 +6,9 @@ import br.edu.ifpb.pps.state.StatusEvento.StatusEventoAberto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 public class Evento {
@@ -14,6 +17,7 @@ public class Evento {
     private String periodo;
     private CategoriaEvento categoriaEvento;
     private StatusEvento statusEvento; // OBS: mais pra frente é bom mover o statusEvento da entidade para a classe que controla os eventos
+    private List<Artigo> artigos = new ArrayList<Artigo>();
 
     public Evento(String nome, String cidade, String periodo, CategoriaEvento categoriaEvento) {
         this.nome = nome;

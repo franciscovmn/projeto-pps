@@ -18,5 +18,7 @@ public class StatusEventoAberto implements StatusEvento {
     @Override
     public void receberArtigo(Artigo artigo){
         System.out.println("TO-DO");
+        evento.getArtigos().add(artigo);
+        //TO-DO: lógica de enviar para os Revisores
     }
 }

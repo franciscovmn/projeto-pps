@@ -17,6 +17,6 @@ public class StatusEventoFechado implements StatusEvento{
 
     @Override
     public void receberArtigo(Artigo artigo){
-        //TO-DO: lógica de enviar para os Revisores
+        throw new RuntimeException("Artigo não pode ser enviado pois o evento está fechado");
     }
 }
