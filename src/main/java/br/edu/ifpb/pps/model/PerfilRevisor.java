@@ -22,4 +22,13 @@ public class PerfilRevisor {
         this.pesquisador = pesquisador;
         this.afinidades = afinidades;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "pesquisador: " + (pesquisador != null ? pesquisador.getNome() : "null") +
+                ", afinidades: " + afinidades +
+                ", qtdArtigosAlocados: " + (artigos != null ? artigos.size() : 0) +
+                "}";
+    }
 }

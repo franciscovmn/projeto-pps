@@ -44,4 +44,16 @@ public class Artigo {
     public String getParecer() {
         return statusArtigo.getParecer();
     }
+
+    // por enquanto, deixei o nome do pesquisador de fora, por causa do Blind Review e afins
+    @Override
+    public String toString() {
+        return "{" +
+                "Id: \"" + Id + "\"" +
+                ", titulo: \"" + titulo + "\"" +
+                ", resumo: \"" + resumo + "\"" +
+                ", nomePDF: \"" + nomePDF + "\"" +
+                ", areasTematicas: " + areasTematicas +
+                "}";
+    }
 }

@@ -11,4 +11,9 @@ public class AreaTematica {
     public AreaTematica(String descricao) {
         this.descricao = descricao;
     }
+
+    @Override
+    public String toString() {
+        return "{descricao: \"" + descricao + "\"}";
+    }
 }

@@ -33,4 +33,16 @@ public class Evento {
     public void receberArtigo(Artigo artigo) {
         statusEvento.receberArtigo(artigo);
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "nome: \"" + nome + "\"" +
+                ", cidade: \"" + cidade + "\"" +
+                ", periodo: \"" + periodo + "\"" +
+                ", dataLimiteSubmissao: \"" + dataLimiteSubmissao + "\"" +
+                ", categoriaEvento: \"" + categoriaEvento + "\"" +
+                ", qtdArtigos: " + (artigos != null ? artigos.size() : 0) +
+                "}";
+    }
 }
