@@ -24,7 +24,7 @@ public class ArtigoCsvRepository implements CsvRepository<Artigo> {
     @Override
     public void salvar(List<Artigo> artigos) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(caminhoArquivo)) {
-            writer.write("id;titulo;autorEmail;coAutoresEmails;areasTematicas;statusArtigo");
+            writer.write("id;titulo;autorEmail;resumo;nomePDF;coAutoresEmails;areasTematicas;statusArtigo");
             writer.newLine();
 
             for (Artigo artigo : artigos) {
@@ -44,11 +44,11 @@ public class ArtigoCsvRepository implements CsvRepository<Artigo> {
                         CsvUtils.escape(artigo.getId()) + ";" +
                                 CsvUtils.escape(artigo.getTitulo()) + ";" +
                                 CsvUtils.escape(artigo.getPesquisador().getEmail()) + ";" +
+                                CsvUtils.escape(artigo.getResumo()) + ";" +
+                                CsvUtils.escape(artigo.getNomePDF()) + ";" +
                                 coAutores + ";" +
                                 areas + ";" +
-                                //artigo.getStatusArtigo().name()
                                 MapperStatusArtigo.paraCsv(artigo.getStatusArtigo())
-
                 );
                 writer.newLine();
             }
@@ -74,9 +74,11 @@ public class ArtigoCsvRepository implements CsvRepository<Artigo> {
                 String id = CsvUtils.unescape(partes[0]);
                 String titulo = CsvUtils.unescape(partes[1]);
                 String autorEmail = CsvUtils.unescape(partes[2]);
-                List<String> coAutoresEmails = CsvUtils.splitList(partes[3]);
-                List<String> areasStr = CsvUtils.splitList(partes[4]);
-                //StatusArtigo status = StatusArtigo.valueOf(partes[5]);
+                String resumo = CsvUtils.unescape(partes[3]);
+                String nomePdf = CsvUtils.unescape(partes[4]);
+
+                List<String> coAutoresEmails = CsvUtils.splitList(partes[5]);
+                List<String> areasStr = CsvUtils.splitList(partes[6]);
 
                 Pesquisador autor = buscarPesquisadorPorEmail(autorEmail);
 
@@ -93,9 +95,9 @@ public class ArtigoCsvRepository implements CsvRepository<Artigo> {
                     areas.add(new AreaTematica(descricao));
                 }
 
-                Artigo artigo = new Artigo(id, titulo, autor, coAutores, areas);
+                Artigo artigo = new Artigo(id, titulo, autor, resumo, nomePdf, coAutores, areas);
                 //artigo.setStatusArtigo(status);
-                StatusArtigo status = MapperStatusArtigo.deCsv(partes[5], artigo);
+                StatusArtigo status = MapperStatusArtigo.deCsv(partes[7], artigo);
                 artigo.setStatusArtigo(status);
 
                 artigos.add(artigo);

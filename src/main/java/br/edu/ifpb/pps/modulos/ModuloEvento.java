@@ -7,6 +7,7 @@ import br.edu.ifpb.pps.state.StatusEvento.StatusEventoAberto;
 import br.edu.ifpb.pps.state.StatusEvento.StatusEventoFechado;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class ModuloEvento {
         this.eventoAtual = evento;
     }
 
-    public void cadastrarEvento(String nome, String cidade, String periodo, CategoriaEvento categoriaEvento){
-        Evento evento = new Evento(nome, cidade, periodo, categoriaEvento);
+    public void cadastrarEvento(String nome, String cidade, String periodo, LocalDateTime dataLimiteSubmissao, CategoriaEvento categoriaEvento){
+        Evento evento = new Evento(nome, cidade, periodo, dataLimiteSubmissao, categoriaEvento);
         eventos.add(evento);
         this.eventoAtual = evento;
     }

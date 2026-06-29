@@ -6,6 +6,7 @@ import br.edu.ifpb.pps.enums.CategoriaEvento;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,23 +46,32 @@ public class TesteCsvEscrita {
             carlos.getAfinidades().add(area4);
             carlos.getAfinidades().add(area1);
 
+            Pesquisador francisco = new Pesquisador("Francisco Viana", "francisco@ifpb.edu.br", "coord123", "IFPB");
+            francisco.getPapeisUsuario().add(PapelUsuario.AUTOR);
+            francisco.getPapeisUsuario().add(PapelUsuario.COORDENADOR);
+            francisco.getAfinidades().add(area1);
+            francisco.getAfinidades().add(area3);
+
             List<Pesquisador> pesquisadores = new ArrayList<>();
             pesquisadores.add(murilo);
             pesquisadores.add(ana);
             pesquisadores.add(carlos);
+            pesquisadores.add(francisco);
 
             // Eventos
             Evento evento1 = new Evento(
                     "SBES 2026",
-                    "Joao Pessoa",
-                    "10/08/2026 a 13/08/2026",
+                    "João Pessoa",
+                    "20 a 24 de Setembro de 2026",
+                    LocalDateTime.of(2026, 8, 10, 23, 59),
                     CategoriaEvento.FULL_PAPER
             );
 
             Evento evento2 = new Evento(
                     "WTD 2026",
                     "Recife",
-                    "05/09/2026 a 07/09/2026",
+                    "15 a 17 de Outubro de 2026",
+                    LocalDateTime.of(2026, 9, 5, 23, 59),
                     CategoriaEvento.SHORT_PAPER
             );
 
@@ -79,8 +89,10 @@ public class TesteCsvEscrita {
 
             Artigo artigo1 = new Artigo(
                     "A1",
-                    "Uso de Padroes em Sistemas de Submissao",
+                    "Uso de Padrões em Sistemas de Submissão",
                     murilo,
+                    "Resumo do artigo...",
+                    "artigoA1.pdf",
                     coautoresArtigo1,
                     areasArtigo1
             );
@@ -94,8 +106,10 @@ public class TesteCsvEscrita {
 
             Artigo artigo2 = new Artigo(
                     "A2",
-                    "Persistencia CSV em Java",
+                    "Persistência CSV em Java",
                     carlos,
+                    "Resumo do segundo artigo...",
+                    "artigoA2.pdf",
                     coautoresArtigo2,
                     areasArtigo2
             );
@@ -103,6 +117,10 @@ public class TesteCsvEscrita {
             List<Artigo> artigos = new ArrayList<>();
             artigos.add(artigo1);
             artigos.add(artigo2);
+
+            // salvando os artigos nos dois eventos
+            evento1.setArtigos(artigos);
+            evento2.setArtigos(artigos);
 
             // Perfis de revisor
             PerfilRevisor perfilMurilo = new PerfilRevisor(murilo);
@@ -133,8 +151,9 @@ public class TesteCsvEscrita {
 
             AreaTematicaCsvRepository areaRepo = new AreaTematicaCsvRepository(diretorioTarget + "areas.csv");
             PesquisadorCsvRepository pesquisadorRepo = new PesquisadorCsvRepository(diretorioTarget + "pesquisadores.csv");
-            EventoCsvRepository eventoRepo = new EventoCsvRepository(diretorioTarget + "eventos.csv");
+            //EventoCsvRepository eventoRepo = new EventoCsvRepository(diretorioTarget + "eventos.csv");
             ArtigoCsvRepository artigoRepo = new ArtigoCsvRepository(diretorioTarget + "artigos.csv", pesquisadores);
+            EventoCsvRepository eventoRepo = new EventoCsvRepository(diretorioTarget + "eventos.csv", artigos);
             PerfilRevisorCsvRepository perfilRepo =
                     new PerfilRevisorCsvRepository(diretorioTarget + "perfis_revisor.csv", pesquisadores, artigos);
 
