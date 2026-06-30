@@ -36,7 +36,7 @@ public class CarregadorDadosCsv {
 
         this.artigos = artigoRepo.carregar();
 
-        ParecerCsvRepository parecerRepo = new ParecerCsvRepository(diretorioTarget + "artigos.csv", artigos, pesquisadores);
+        ParecerCsvRepository parecerRepo = new ParecerCsvRepository(diretorioTarget + "pareceres.csv", artigos, pesquisadores);
         this.pareceres = parecerRepo.carregar();
 
         // Carrega eventos
