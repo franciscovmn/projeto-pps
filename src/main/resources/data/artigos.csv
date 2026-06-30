@@ -1,3 +1,3 @@
 id;titulo;autorEmail;resumo;nomePDF;coAutoresEmails;areasTematicas;statusArtigo
-A1;Uso de Padrões em Sistemas de Submissão;murilo@ifpb.edu.br;Resumo do artigo...;artigoA1.pdf;ana@ufpb.br;Engenharia de Software|Inteligencia Artificial;SUBMETIDO
+A1;Uso de Padrões em Sistemas de Submissão;murilo@ifpb.edu.br;Resumo do artigo...;artigoA1.pdf;ana@ufpb.br;Engenharia de Software|Inteligencia Artificial;ACEITO
 A2;Persistência CSV em Java;carlos@ifpe.edu.br;Resumo do segundo artigo...;artigoA2.pdf;murilo@ifpb.edu.br;Computacao em Nuvem|Banco de Dados;SUBMETIDO

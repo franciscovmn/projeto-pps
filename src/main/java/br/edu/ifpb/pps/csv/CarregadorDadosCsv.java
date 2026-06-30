@@ -15,6 +15,7 @@ public class CarregadorDadosCsv {
     private List<Artigo> artigos;
     private List<Evento> eventos;
     private List<PerfilRevisor> perfis;
+    private List<Parecer> pareceres;
 
     private CarregadorDadosCsv() throws IOException {
         String diretorioTarget = "src/main/resources/data/";
@@ -34,6 +35,9 @@ public class CarregadorDadosCsv {
                         pesquisadores);
 
         this.artigos = artigoRepo.carregar();
+
+        ParecerCsvRepository parecerRepo = new ParecerCsvRepository(diretorioTarget + "artigos.csv", artigos, pesquisadores);
+        this.pareceres = parecerRepo.carregar();
 
         // Carrega eventos
         EventoCsvRepository eventoRepo =

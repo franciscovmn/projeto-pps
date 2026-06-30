@@ -27,6 +27,9 @@ public class TesteCsvLeitura {
                     new ArtigoCsvRepository(diretorioTarget + "artigos.csv", pesquisadoresCarregados);
             List<Artigo> artigosCarregados = artigoRepoLeitura.carregar();
 
+            ParecerCsvRepository parecerRepoLeitura = new ParecerCsvRepository(diretorioTarget + "pareceres.csv", artigosCarregados, pesquisadoresCarregados);
+            List<Parecer> pareceresCarregados = parecerRepoLeitura.carregar();
+
             EventoCsvRepository eventoRepo = new EventoCsvRepository(diretorioTarget + "eventos.csv", artigosCarregados);
             List<Evento> eventosCarregados = eventoRepo.carregar();
 
@@ -89,6 +92,19 @@ public class TesteCsvLeitura {
                 System.out.println();
 
                 System.out.println("Status: " + a.getStatusArtigo());
+                System.out.println("---");
+            }
+
+            System.out.println("\n===== PARECERES =====");
+            for (Parecer parecer : pareceresCarregados) {
+                System.out.println("ID: " + parecer.getId());
+                System.out.println("Artigo: " + (parecer.getArtigo() != null ? parecer.getArtigo().getTitulo() : "null"));
+                System.out.println("Revisor: " + (parecer.getRevisor() != null ? parecer.getRevisor().getNome() : "null"));
+                System.out.println("Contribuicoes: " + parecer.getContribuicoes());
+                System.out.println("Criticas: " + parecer.getCriticas());
+                System.out.println("Veredito: " + parecer.getVeredito());
+                System.out.println("Data Conclusao: " + parecer.getDataConclusao());
+
                 System.out.println("---");
             }
 

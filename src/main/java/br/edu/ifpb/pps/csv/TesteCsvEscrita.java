@@ -1,8 +1,10 @@
 package br.edu.ifpb.pps.csv;
 
 import br.edu.ifpb.pps.enums.PapelUsuario;
+import br.edu.ifpb.pps.enums.Veredito;
 import br.edu.ifpb.pps.model.*;
 import br.edu.ifpb.pps.enums.CategoriaEvento;
+import br.edu.ifpb.pps.state.StatusArtigo.StatusArtigoAceito;
 
 import java.io.File;
 import java.io.IOException;
@@ -114,6 +116,32 @@ public class TesteCsvEscrita {
                     areasArtigo2
             );
 
+            Parecer parecer1 = new Parecer(
+                    "P1",
+                    artigo1,
+                    carlos,
+                    "Excelente artigo.",
+                    "Pequenos ajustes de escrita.",
+                    Veredito.ACEITO,
+                    LocalDateTime.now()
+            );
+
+            Parecer parecer2 = new Parecer(
+                    "P2",
+                    artigo2,
+                    murilo,
+                    "Tema interessante.",
+                    "Faltam experimentos.",
+                    Veredito.ACEITO,
+                    LocalDateTime.now()
+            );
+            artigo1.setStatusArtigo(new StatusArtigoAceito(artigo1));
+
+            List<Parecer> pareceres = new ArrayList<>();
+
+            pareceres.add(parecer1);
+            pareceres.add(parecer2);
+
             List<Artigo> artigos = new ArrayList<>();
             artigos.add(artigo1);
             artigos.add(artigo2);
@@ -153,6 +181,11 @@ public class TesteCsvEscrita {
             PesquisadorCsvRepository pesquisadorRepo = new PesquisadorCsvRepository(diretorioTarget + "pesquisadores.csv");
             //EventoCsvRepository eventoRepo = new EventoCsvRepository(diretorioTarget + "eventos.csv");
             ArtigoCsvRepository artigoRepo = new ArtigoCsvRepository(diretorioTarget + "artigos.csv", pesquisadores);
+            ParecerCsvRepository parecerRepo = new ParecerCsvRepository(
+                    diretorioTarget + "pareceres.csv",
+                            artigos,
+                            pesquisadores
+                    );
             EventoCsvRepository eventoRepo = new EventoCsvRepository(diretorioTarget + "eventos.csv", artigos);
             PerfilRevisorCsvRepository perfilRepo =
                     new PerfilRevisorCsvRepository(diretorioTarget + "perfis_revisor.csv", pesquisadores, artigos);
@@ -161,6 +194,7 @@ public class TesteCsvEscrita {
             pesquisadorRepo.salvar(pesquisadores);
             eventoRepo.salvar(eventos);
             artigoRepo.salvar(artigos);
+            parecerRepo.salvar(pareceres);
             perfilRepo.salvar(perfis);
 
             System.out.println("Arquivos CSV gerados com sucesso em: " + diretorioTarget);
