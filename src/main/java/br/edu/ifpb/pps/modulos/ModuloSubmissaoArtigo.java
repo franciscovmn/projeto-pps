@@ -4,7 +4,7 @@ import br.edu.ifpb.pps.mediator.ModuloSistema;
 import br.edu.ifpb.pps.model.AreaTematica;
 import br.edu.ifpb.pps.model.Artigo;
 import br.edu.ifpb.pps.model.Pesquisador;
-import br.edu.ifpb.pps.validacao.ValidadorSubmissao;
+import br.edu.ifpb.pps.chain.validacao.ValidadorSubmissao;
 
 import java.util.ArrayList;
 import java.util.HashMap;

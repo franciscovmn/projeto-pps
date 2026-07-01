@@ -1,5 +1,10 @@
 package br.edu.ifpb.pps;
 
+import br.edu.ifpb.pps.chain.validacao.ValidadorAreaTematica;
+import br.edu.ifpb.pps.chain.validacao.ValidadorArquivoPDF;
+import br.edu.ifpb.pps.chain.validacao.ValidadorBase;
+import br.edu.ifpb.pps.chain.validacao.ValidadorResumo;
+import br.edu.ifpb.pps.chain.validacao.ValidadorTitulo;
 import br.edu.ifpb.pps.enums.CategoriaEvento;
 import br.edu.ifpb.pps.mediator.MediatorSistema;
 import br.edu.ifpb.pps.model.AreaTematica;
@@ -36,6 +41,12 @@ public class Main {
         ModuloEvento moduloEvento = new ModuloEvento();
         ModuloSubmissaoArtigo moduloSubmissao = new ModuloSubmissaoArtigo();
         ServicoNotificacao servicoNotificacao = new EmailService();
+
+        ValidadorBase cadeiaValidacao = new ValidadorTitulo();
+        cadeiaValidacao.setProximo(new ValidadorResumo())
+                       .setProximo(new ValidadorAreaTematica())
+                       .setProximo(new ValidadorArquivoPDF());
+        moduloSubmissao.setValidador(cadeiaValidacao);
 
         MediatorSistema mediator = new MediatorSistema(moduloCadastro, moduloEvento, moduloSubmissao, servicoNotificacao);
 

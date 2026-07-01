@@ -55,3 +55,7 @@ alinhamento-equipe.html
 
 # Configurações locais
 config.local.properties
+
+# secrets
+
+*/secrets

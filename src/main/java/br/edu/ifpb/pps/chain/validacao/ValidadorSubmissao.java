@@ -1,4 +1,4 @@
-package br.edu.ifpb.pps.validacao;
+package br.edu.ifpb.pps.chain.validacao;
 
 import br.edu.ifpb.pps.model.Artigo;
 
