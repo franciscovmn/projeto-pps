@@ -1,6 +1,7 @@
 package br.edu.ifpb.pps.dashboard;
 
 import br.edu.ifpb.pps.model.Artigo;
+import br.edu.ifpb.pps.model.Evento;
 import br.edu.ifpb.pps.model.PerfilRevisor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,8 @@ import java.util.*;
 public class Dashboard {
     private static Dashboard instance = new Dashboard();
 
+    @Getter @Setter
+    private Evento evento;
     @Getter
     private int artigosSubmetidos;
     @Getter
@@ -60,7 +63,7 @@ public class Dashboard {
     public String imprimirEstatisticas() {
         StringBuilder relatorio = new StringBuilder();
 
-        relatorio.append("=== ESTATÍSTICAS DO DASHBOARD ===\n");
+        relatorio.append("=== ESTATÍSTICAS DO DASHBOARD DO EVENTO: " + evento.getNome() + "===\n");
         relatorio.append(String.format("Artigos Submetidos: %d\n", artigosSubmetidos));
         relatorio.append(String.format("Artigos Avaliados: %d\n", artigosAvaliados));
         relatorio.append(String.format("Quantidade de Revisores: %d\n", qtdePerfilRevisores));

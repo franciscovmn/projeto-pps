@@ -25,4 +25,14 @@ public class Pesquisador {
         this.senha = senha;
         this.instituicao = instituicao;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "nome: \"" + nome + "\"" +
+                ", email: \"" + email + "\"" +
+                ", instituicao: \"" + instituicao + "\"" +
+                ", afinidades: " + afinidades +
+                "}";
+    }
 }

@@ -11,7 +11,8 @@ import lombok.Setter;
 public class PerfilRevisor {
     private Pesquisador pesquisador;
     private List<AreaTematica> afinidades = new ArrayList<AreaTematica>();
-    private List<Artigo> artigosRevisados;
+    private List<Artigo> artigos = new ArrayList<Artigo>();
+    private List<Artigo> artigosRevisados = new ArrayList<Artigo>();
 
     public PerfilRevisor(Pesquisador pesquisador) {
         this.pesquisador = pesquisador;
@@ -20,5 +21,14 @@ public class PerfilRevisor {
     public PerfilRevisor(Pesquisador pesquisador, List<AreaTematica> afinidades) {
         this.pesquisador = pesquisador;
         this.afinidades = afinidades;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "pesquisador: " + (pesquisador != null ? pesquisador.getNome() : "null") +
+                ", afinidades: " + afinidades +
+                ", qtdArtigosAlocados: " + (artigos != null ? artigos.size() : 0) +
+                "}";
     }
 }

@@ -14,22 +14,28 @@ public class Artigo {
     private String Id;
     private String titulo;
     private Pesquisador pesquisador;
+    private String resumo;
+    private String nomePDF;
     private List<Pesquisador> coAutores = new ArrayList<Pesquisador>();
     private List<AreaTematica> areasTematicas;
     private StatusArtigo statusArtigo;
 
-    public Artigo(String id, String titulo, Pesquisador pesquisador, List<AreaTematica> areasTematicas) {
+    public Artigo(String id, String titulo, Pesquisador pesquisador, String resumo, String nomePDF, List<AreaTematica> areasTematicas) {
         this.Id = id;
         this.titulo = titulo;
         this.pesquisador = pesquisador;
+        this.resumo = resumo;
+        this.nomePDF = nomePDF;
         this.areasTematicas = areasTematicas;
         this.statusArtigo = new StatusArtigoSubmetido(this);
     }
 
-    public Artigo(String id, String titulo, Pesquisador pesquisador,List<Pesquisador> coAutores, List<AreaTematica> areasTematicas) {
+    public Artigo(String id, String titulo, Pesquisador pesquisador, String resumo, String nomePDF, List<Pesquisador> coAutores, List<AreaTematica> areasTematicas) {
         this.Id = id;
         this.titulo = titulo;
         this.pesquisador = pesquisador;
+        this.resumo = resumo;
+        this.nomePDF = nomePDF;
         this.coAutores = coAutores;
         this.areasTematicas = areasTematicas;
         this.statusArtigo = new StatusArtigoSubmetido(this);
@@ -37,5 +43,17 @@ public class Artigo {
 
     public String getParecer() {
         return statusArtigo.getParecer();
+    }
+
+    // por enquanto, deixei o nome do pesquisador de fora, por causa do Blind Review e afins
+    @Override
+    public String toString() {
+        return "{" +
+                "Id: \"" + Id + "\"" +
+                ", titulo: \"" + titulo + "\"" +
+                ", resumo: \"" + resumo + "\"" +
+                ", nomePDF: \"" + nomePDF + "\"" +
+                ", areasTematicas: " + areasTematicas +
+                "}";
     }
 }

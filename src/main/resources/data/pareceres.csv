@@ -1,0 +1,5 @@
+id;artigoId;revisorEmail;contribuicoes;criticas;veredito;dataConclusao
+P1;A1;carlos@ifpe.edu.br;Excelente artigo.;Pequenos ajustes de escrita.;ACEITO;2026-06-30T13:48:21.493868500
+P2;A2;murilo@ifpb.edu.br;Tema interessante.;Faltam experimentos.;ACEITO;2026-06-30T13:48:21.493868500
+P3;A3;ricardo@ifpb.edu.br;Trabalho muito bem estruturado.;Sugerido expandir a fundamentação.;ACEITO;2026-06-30T13:48:21.493868500
+P4;A4;beatriz@ufcg.edu.br;Contribuição relevante para a área.;Revisar as referências.;ACEITO;2026-06-30T13:48:21.493868500
