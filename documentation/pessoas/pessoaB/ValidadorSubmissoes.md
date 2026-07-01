@@ -1,4 +1,4 @@
-# Validador de Submissoes
+# Validador de Submissoes - Chain
 
 ## Responsável
 Jonas
