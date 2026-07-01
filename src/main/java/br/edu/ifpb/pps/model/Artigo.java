@@ -19,6 +19,11 @@ public class Artigo {
     private List<Pesquisador> coAutores = new ArrayList<Pesquisador>();
     private List<AreaTematica> areasTematicas;
     private StatusArtigo statusArtigo;
+    private List<Parecer> pareceres = new ArrayList<>();
+
+    public void adicionarParecer(Parecer parecer) {
+        pareceres.add(parecer);
+    }
 
     public Artigo(String id, String titulo, Pesquisador pesquisador, String resumo, String nomePDF, List<AreaTematica> areasTematicas) {
         this.Id = id;
