@@ -1,5 +1,7 @@
 package br.edu.ifpb.pps;
 
+import br.edu.ifpb.pps.apresentacao.ApresentacaoConsole;
+import br.edu.ifpb.pps.apresentacao.ServicoApresentacao;
 import br.edu.ifpb.pps.chain.validacao.ValidadorAreaTematica;
 import br.edu.ifpb.pps.chain.validacao.ValidadorArquivoPDF;
 import br.edu.ifpb.pps.chain.validacao.ValidadorBase;
@@ -22,25 +24,20 @@ import br.edu.ifpb.pps.template.NotificacaoRejeicao;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Ponto de entrada do Sistema de Submissão e Avaliação de Artigos Científicos.
- *
- * <p>Disciplina: Padrões de Projeto de Software</p>
- * <p>Professor: Alex Sandro da Cunha Rêgo</p>
- * <p>Instituto Federal da Paraíba — IFPB</p>
- */
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("=================================================");
-        System.out.println("  Sistema de Submissão de Artigos Científicos");
-        System.out.println("  IFPB — Padrões de Projeto de Software");
-        System.out.println("=================================================\n");
+        ServicoApresentacao apresentacao = new ApresentacaoConsole();
+
+        apresentacao.exibir("=================================================");
+        apresentacao.exibir("  Sistema de Submissão de Artigos Científicos");
+        apresentacao.exibir("  IFPB — Padrões de Projeto de Software");
+        apresentacao.exibir("=================================================\n");
 
         ModuloCadastroPesquisador moduloCadastro = new ModuloCadastroPesquisador();
         ModuloEvento moduloEvento = new ModuloEvento();
         ModuloSubmissaoArtigo moduloSubmissao = new ModuloSubmissaoArtigo();
-        ServicoNotificacao servicoNotificacao = new EmailService();
+        ServicoNotificacao servicoNotificacao = EmailService.configurarPorAmbiente(apresentacao);
 
         ValidadorBase cadeiaValidacao = new ValidadorTitulo();
         cadeiaValidacao.setProximo(new ValidadorResumo())
@@ -50,24 +47,24 @@ public class Main {
 
         MediatorSistema mediator = new MediatorSistema(moduloCadastro, moduloEvento, moduloSubmissao, servicoNotificacao);
 
-        System.out.println("[1] Cadastro de pesquisadores");
+        apresentacao.exibir("[1] Cadastro de pesquisadores");
         moduloCadastro.cadastrarPesquisador("Ana Coordenadora", "ana@ifpb.edu.br", "123", "IFPB", true);
         moduloCadastro.cadastrarPesquisador("Bruno Autor", "bruno@ifpb.edu.br", "123", "IFPB", false);
         moduloCadastro.cadastrarPesquisador("Carla Revisora", "carla@ifpb.edu.br", "123", "UFPB", false);
-        System.out.println("    Pesquisadores cadastrados: " + moduloCadastro.listarPesquisadores().size());
+        apresentacao.exibir("    Pesquisadores cadastrados: " + moduloCadastro.listarPesquisadores().size());
 
-        System.out.println("\n[2] Evento e áreas temáticas");
+        apresentacao.exibir("\n[2] Evento e áreas temáticas");
         moduloEvento.cadastrarEvento("SBES", "João Pessoa", "2026", LocalDateTime.now().plusDays(30), CategoriaEvento.FULL_PAPER);
         mediator.cadastrarAreaTematica("Engenharia de Software");
         mediator.cadastrarAreaTematica("Inteligência Artificial");
         mediator.iniciarEvento();
-        System.out.println("    Evento \"" + moduloEvento.getEventoAtual().getNome() + "\" aberto para submissões.");
+        apresentacao.exibir("    Evento \"" + moduloEvento.getEventoAtual().getNome() + "\" aberto para submissões.");
 
-        System.out.println("\n[3] Convite de revisor");
+        apresentacao.exibir("\n[3] Convite de revisor");
         mediator.convidarRevisor("carla@ifpb.edu.br");
-        System.out.println("    Revisores: " + moduloCadastro.listarRevisores().size());
+        apresentacao.exibir("    Revisores: " + moduloCadastro.listarRevisores().size());
 
-        System.out.println("\n[4] Submissão de artigo");
+        apresentacao.exibir("\n[4] Submissão de artigo");
         Pesquisador autor = moduloCadastro.buscarPesquisadorPorEmail("bruno@ifpb.edu.br");
         List<AreaTematica> areas = List.of(new AreaTematica("Engenharia de Software"));
         Artigo artigo = mediator.submeterArtigo(
@@ -76,9 +73,9 @@ public class Main {
                 "Um estudo sobre a aplicação de padrões GoF em sistemas acadêmicos.",
                 "padroes-na-pratica.pdf",
                 areas);
-        System.out.println("    Artigo submetido: " + artigo.getId() + " — " + artigo.getTitulo());
+        apresentacao.exibir("    Artigo submetido: " + artigo.getId() + " — " + artigo.getTitulo());
 
-        System.out.println("\n[5] Notificação de aceite (Template Method + envio)");
+        apresentacao.exibir("\n[5] Notificação de aceite (Template Method + envio)");
         Pesquisador coordenador = moduloCadastro.buscarPesquisadorPorEmail("ana@ifpb.edu.br");
         List<String[]> pareceresAceite = List.of(
                 new String[]{"Abordagem clara e bem fundamentada.", "Revisar a formatação das referências."},
@@ -93,14 +90,14 @@ public class Main {
                 pareceresAceite);
         mediator.notificar(autor.getEmail(), "Resultado da submissão " + artigo.getId(), aceite.gerarNotificacao());
 
-        System.out.println("\n[6] Notificação de rejeição (Template Method + envio)");
+        apresentacao.exibir("\n[6] Notificação de rejeição (Template Method + envio)");
         Artigo artigoRejeitado = mediator.submeterArtigo(
                 "Uma Nova Linguagem de Programação",
                 autor,
                 "Proposta preliminar de uma linguagem de propósito geral.",
                 "nova-linguagem.pdf",
                 areas);
-        System.out.println("    Artigo submetido: " + artigoRejeitado.getId() + " — " + artigoRejeitado.getTitulo());
+        apresentacao.exibir("    Artigo submetido: " + artigoRejeitado.getId() + " — " + artigoRejeitado.getTitulo());
         List<String[]> pareceresRejeicao = List.of(
                 new String[]{"Tema pertinente.", "Fundamentação teórica insuficiente.", "Ausência de avaliação experimental."},
                 new String[]{"Texto bem escrito.", "Contribuição pouco original."}
@@ -114,8 +111,8 @@ public class Main {
                 pareceresRejeicao);
         mediator.notificar(autor.getEmail(), "Resultado da submissão " + artigoRejeitado.getId(), rejeicao.gerarNotificacao());
 
-        System.out.println("\n=================================================");
-        System.out.println("  Fim da demonstração parcial");
-        System.out.println("=================================================");
+        apresentacao.exibir("\n=================================================");
+        apresentacao.exibir("  Fim da demonstração parcial");
+        apresentacao.exibir("=================================================");
     }
 }
