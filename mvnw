@@ -4,8 +4,10 @@
 
 set -e
 
-MAVEN_WRAPPER_JAR=".mvn/wrapper/maven-wrapper.jar"
-MAVEN_WRAPPER_PROPERTIES=".mvn/wrapper/maven-wrapper.properties"
+MAVEN_PROJECTBASEDIR="$(cd "$(dirname "$0")" && pwd)"
+MAVEN_WRAPPER_JAR="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.jar"
+MAVEN_WRAPPER_PROPERTIES="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.properties"
+WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
 
 # Lê a URL do wrapper jar
 WRAPPER_URL=$(grep "wrapperUrl" "$MAVEN_WRAPPER_PROPERTIES" | cut -d'=' -f2)
@@ -22,4 +24,6 @@ if [ ! -f "$MAVEN_WRAPPER_JAR" ]; then
     fi
 fi
 
-exec java -jar "$MAVEN_WRAPPER_JAR" "$@"
+exec java -classpath "$MAVEN_WRAPPER_JAR" \
+    "-Dmaven.multiModuleProjectDirectory=$MAVEN_PROJECTBASEDIR" \
+    "$WRAPPER_LAUNCHER" "$@"

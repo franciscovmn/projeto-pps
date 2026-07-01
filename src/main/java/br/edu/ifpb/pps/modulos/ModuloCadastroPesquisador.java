@@ -1,13 +1,14 @@
 package br.edu.ifpb.pps.modulos;
 
 import br.edu.ifpb.pps.enums.PapelUsuario;
+import br.edu.ifpb.pps.mediator.ModuloSistema;
 import br.edu.ifpb.pps.model.AreaTematica;
 import br.edu.ifpb.pps.model.PerfilRevisor;
 import br.edu.ifpb.pps.model.Pesquisador;
 
 import java.util.*;
 
-public class ModuloCadastroPesquisador { //extends ModuloSistema {
+public class ModuloCadastroPesquisador extends ModuloSistema {
     private final Map<String, Pesquisador> pesquisadores = new HashMap<>();
     private final Map<String, PerfilRevisor> revisores = new HashMap<>();
 

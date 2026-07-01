@@ -1,6 +1,7 @@
 package br.edu.ifpb.pps.modulos;
 
 import br.edu.ifpb.pps.enums.CategoriaEvento;
+import br.edu.ifpb.pps.mediator.ModuloSistema;
 import br.edu.ifpb.pps.model.AreaTematica;
 import br.edu.ifpb.pps.model.Evento;
 import br.edu.ifpb.pps.state.StatusEvento.StatusEventoAberto;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class ModuloEvento {
+public class ModuloEvento extends ModuloSistema {
     private final List<Evento> eventos = new ArrayList<Evento>();
     private List<AreaTematica> aerasTematicas = new ArrayList<AreaTematica>();
     private Evento eventoAtual;
