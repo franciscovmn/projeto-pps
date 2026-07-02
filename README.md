@@ -158,8 +158,8 @@ O sistema distribui automaticamente artigos para revisores considerando:
 * *Blind-review*.
 
 > **Padrões de Projeto Adotados:** 
-> * **Strategy:** Utilizado na variação de algoritmos através da interface `EstrategiaDistribuicao` e sua implementação concreta `DistribuicaoPorAfinidade`.
-> * **Observer:** Implementado via `ObservadorRevisor` e `NotificadorRevisor` para disparar ações automáticas pós-distribuição.
+> * **Strategy:** Utilizado na variação de algoritmos através da interface `EstrategiaDistribuicao` e sua implementação concreta `DistribuicaoPorAfinidade`. O `DistribuicaoService` orquestra validação, seleção por afinidade e filtro de *blind-review* sem alterar a assinatura da estratégia.
+> * **Observer:** Interface `ObservadorRevisor` com dois observadores concretos: `RevisorConcreto` (saída em console via `ServicoApresentacao`) e `EmailObservadorRevisor` (envio de convite por e-mail via `ServicoNotificacao`). O `NotificadorRevisor` notifica cada revisor atribuído individualmente.
 
 ---
 
@@ -183,8 +183,8 @@ Descrição dos pontos negativos do artigo.
 * Recusado.
 
 > **Padrões de Projeto Adotados:** 
-> * **Mediator:** Implementado via `ModuloRevisao` para coordenar o registro de pareceres e consolidação de resultados.
-> * **State:** Atualiza os estados internos de fluxo do artigo dependendo das avaliações recebidas.
+> * **Mediator:** Implementado via `ModuloRevisao` (colleague do `MediatorSistema`) para coordenar o registro de pareceres e consolidação de resultados. O método `agregarResultado` conta vereditos positivos (`ACEITO`, `FRACAMENTE_ACEITO`) contra negativos e determina o resultado final por maioria.
+> * **State:** Atualiza o ciclo de vida do artigo com base no resultado agregado, transitando para `StatusArtigoAceito` ou `StatusArtigoRejeitado`.
 
 ---
 
@@ -253,11 +253,11 @@ A distribuição do escopo de desenvolvimento foi realizada de maneira estratég
 **Foco Principal:** Camada de regras de negócio complexas, motores de validação, algoritmos de distribuição e fluxo de revisão.
 
 **Componentes Desenvolvidos:**
-* Implementação do `ValidadorSubmissao` aplicando o padrão **Chain of Responsibility** para encadear regras obrigatórias (prazos, status do evento, obrigatoriedade de campos e coautores).
-* Arquitetura de seleção de algoritmos de alocação de artigos com a interface `EstrategiaDistribuicao` e a classe concreta `DistribuicaoPorAfinidade` através do padrão **Strategy**.
-* Sistema de monitoramento de alocações com as classes `ObservadorRevisor` e `NotificadorRevisor` via padrão **Observer**.
-* Desenvolvimento do núcleo de distribuição igualitária global (`DistribuicaoService`), tratando o balanceamento de carga, restrições de autoria e o anonimato (*blind-review*).
-* Criação do `ModuloRevisao` estruturado via padrão **Mediator** para recepção de pareceres detalhados e apuração de vereditos.
+* Implementação da validação de submissões por meio do padrão **chain**: classe abstrata `ValidadorBase` com quatro validadores concretos encadeados — `ValidadorEventoAberto` (verifica status do evento), `ValidadorPrazo` (verifica data limite), `ValidadorCamposObrigatorios` (título, resumo, PDF e área temática) e `ValidadorCoautoresCadastrados` (confirma cadastro de coautores no sistema). Cada validador recebe suas dependências via construtor sem alterar a assinatura `validar(Artigo)`.
+* Arquitetura de seleção de algoritmos de alocação via padrão **Strategy**: interface `EstrategiaDistribuicao` e implementação concreta `DistribuicaoPorAfinidade`, que seleciona revisores comparando as áreas temáticas do artigo com as afinidades de cada revisor.
+* Sistema de notificação de revisores via padrão **Observer**: subject `NotificadorRevisor`, interface `ObservadorRevisor` e dois observers concretos — `RevisorConcreto` (log em console) e `EmailObservadorRevisor` (convite por e-mail formatado).
+* Serviço orquestrador `DistribuicaoService` compondo Chain, Strategy e Observer: valida, seleciona por afinidade, aplica filtro de *blind-review* (exclui autores do próprio artigo), transiciona o estado para `EmRevisao` e notifica os revisores atribuídos.
+* `ModuloRevisao` como colleague do padrão **Mediator**: registra pareceres no artigo e, ao agregar resultado, conta vereditos positivos vs. negativos para disparar a transição de estado (`StatusArtigoAceito` ou `StatusArtigoRejeitado`) via padrão **State**.
 
 **Entregas Técnicas:** Redação da seção técnica de regras do manual e revisão conceitual da lógica de negócio no diagrama de classes.
 
