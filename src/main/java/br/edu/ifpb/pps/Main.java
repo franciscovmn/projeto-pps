@@ -25,9 +25,8 @@ import br.edu.ifpb.pps.notificacao.ServicoNotificacao;
 import br.edu.ifpb.pps.observer.EmailObservadorRevisor;
 import br.edu.ifpb.pps.observer.NotificadorRevisor;
 import br.edu.ifpb.pps.observer.RevisorConcreto;
+import br.edu.ifpb.pps.modulos.ModuloRevisao;
 import br.edu.ifpb.pps.service.DistribuicaoService;
-import br.edu.ifpb.pps.state.StatusArtigo.StatusArtigoAceito;
-import br.edu.ifpb.pps.state.StatusArtigo.StatusArtigoRejeitado;
 import br.edu.ifpb.pps.strategy.distribuicao.DistribuicaoPorAfinidade;
 
 public class Main {
@@ -62,9 +61,11 @@ public class Main {
                 new DistribuicaoPorAfinidade(),
                 notificadorRevisor);
 
+        ModuloRevisao moduloRevisao = new ModuloRevisao();
+
         MediatorSistema mediator = new MediatorSistema(
                 moduloCadastro, moduloEvento, moduloSubmissao,
-                servicoNotificacao, distribuicaoService);
+                servicoNotificacao, distribuicaoService, moduloRevisao);
 
         // [1] Cadastro de pesquisadores
         apresentacao.exibir("[1] Cadastro de pesquisadores");
@@ -112,19 +113,19 @@ public class Main {
         apresentacao.exibir("    Status: " + aceito.getId() + " → " + aceito.getStatusArtigo().getNome());
         apresentacao.exibir("    Status: " + rejeitado.getId() + " → " + rejeitado.getStatusArtigo().getNome());
 
-        // [6] Resultado das revisões (State + Parecer)
+        // [6] Resultado das revisões (ModuloRevisao + State)
         apresentacao.exibir("\n[6] Resultado das revisões");
         Pesquisador revisora = moduloCadastro.buscarPesquisadorPorEmail("carla@ifpb.edu.br");
 
-        aceito.setStatusArtigo(new StatusArtigoAceito(aceito));
-        aceito.adicionarParecer(new Parecer("PAR-1", aceito, revisora,
+        mediator.registrarParecer(aceito, new Parecer("PAR-1", aceito, revisora,
                 "Abordagem clara e bem fundamentada.", "Revisar a formatação das referências.",
                 Veredito.ACEITO, LocalDateTime.now()));
+        mediator.agregarResultado(aceito);
 
-        rejeitado.setStatusArtigo(new StatusArtigoRejeitado(rejeitado));
-        rejeitado.adicionarParecer(new Parecer("PAR-2", rejeitado, revisora,
+        mediator.registrarParecer(rejeitado, new Parecer("PAR-2", rejeitado, revisora,
                 "Tema pertinente.", "Fundamentação teórica insuficiente.",
                 Veredito.RECUSADO, LocalDateTime.now()));
+        mediator.agregarResultado(rejeitado);
 
         apresentacao.exibir("    " + aceito.getId() + " → " + aceito.getStatusArtigo().getNome());
         apresentacao.exibir("    " + rejeitado.getId() + " → " + rejeitado.getStatusArtigo().getNome());

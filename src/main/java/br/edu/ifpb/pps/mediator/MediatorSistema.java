@@ -11,6 +11,7 @@ import br.edu.ifpb.pps.modulos.ModuloCadastroPesquisador;
 import br.edu.ifpb.pps.modulos.ModuloEvento;
 import br.edu.ifpb.pps.modulos.ModuloSubmissaoArtigo;
 import br.edu.ifpb.pps.notificacao.ServicoNotificacao;
+import br.edu.ifpb.pps.modulos.ModuloRevisao;
 import br.edu.ifpb.pps.service.DistribuicaoService;
 import br.edu.ifpb.pps.template.NotificacaoAceitacao;
 import br.edu.ifpb.pps.template.NotificacaoEmail;
@@ -26,19 +27,22 @@ public class MediatorSistema {
     private final ModuloSubmissaoArtigo moduloSubmissao;
     private final ServicoNotificacao servicoNotificacao;
     private final DistribuicaoService distribuicaoService;
+    private final ModuloRevisao moduloRevisao;
 
     public MediatorSistema(ModuloCadastroPesquisador moduloCadastro, ModuloEvento moduloEvento,
                            ModuloSubmissaoArtigo moduloSubmissao, ServicoNotificacao servicoNotificacao,
-                           DistribuicaoService distribuicaoService) {
+                           DistribuicaoService distribuicaoService, ModuloRevisao moduloRevisao) {
         this.moduloCadastro = moduloCadastro;
         this.moduloEvento = moduloEvento;
         this.moduloSubmissao = moduloSubmissao;
         this.servicoNotificacao = servicoNotificacao;
         this.distribuicaoService = distribuicaoService;
+        this.moduloRevisao = moduloRevisao;
 
         moduloCadastro.setMediator(this);
         moduloEvento.setMediator(this);
         moduloSubmissao.setMediator(this);
+        moduloRevisao.setMediator(this);
     }
 
     public void cadastrarAreaTematica(String descricao) {
@@ -59,6 +63,14 @@ public class MediatorSistema {
     public void distribuirArtigo(Artigo artigo) {
         List<PerfilRevisor> candidatos = moduloCadastro.listarRevisores();
         distribuicaoService.distribuir(artigo, candidatos);
+    }
+
+    public void registrarParecer(Artigo artigo, Parecer parecer) {
+        moduloRevisao.registrarParecer(artigo, parecer);
+    }
+
+    public void agregarResultado(Artigo artigo) {
+        moduloRevisao.agregarResultado(artigo);
     }
 
     public void iniciarEvento() {
