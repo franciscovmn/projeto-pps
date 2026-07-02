@@ -20,6 +20,7 @@ import br.edu.ifpb.pps.modulos.ModuloEvento;
 import br.edu.ifpb.pps.modulos.ModuloSubmissaoArtigo;
 import br.edu.ifpb.pps.notificacao.EmailService;
 import br.edu.ifpb.pps.notificacao.ServicoNotificacao;
+import br.edu.ifpb.pps.observer.EmailObservadorRevisor;
 import br.edu.ifpb.pps.observer.NotificadorRevisor;
 import br.edu.ifpb.pps.observer.RevisorConcreto;
 import br.edu.ifpb.pps.service.DistribuicaoService;
@@ -49,7 +50,8 @@ public class Main {
                        .setProximo(new ValidadorArquivoPDF());
 
         NotificadorRevisor notificadorRevisor = new NotificadorRevisor();
-        notificadorRevisor.registrar(new RevisorConcreto());
+        notificadorRevisor.registrar(new RevisorConcreto(apresentacao));
+        notificadorRevisor.registrar(new EmailObservadorRevisor(servicoNotificacao));
 
         DistribuicaoService distribuicaoService = new DistribuicaoService(
                 cadeiaValidacao,
