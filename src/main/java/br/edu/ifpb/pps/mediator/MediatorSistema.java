@@ -2,11 +2,13 @@ package br.edu.ifpb.pps.mediator;
 
 import br.edu.ifpb.pps.model.AreaTematica;
 import br.edu.ifpb.pps.model.Artigo;
+import br.edu.ifpb.pps.model.PerfilRevisor;
 import br.edu.ifpb.pps.model.Pesquisador;
 import br.edu.ifpb.pps.modulos.ModuloCadastroPesquisador;
 import br.edu.ifpb.pps.modulos.ModuloEvento;
 import br.edu.ifpb.pps.modulos.ModuloSubmissaoArtigo;
 import br.edu.ifpb.pps.notificacao.ServicoNotificacao;
+import br.edu.ifpb.pps.service.DistribuicaoService;
 
 import java.util.List;
 
@@ -16,13 +18,16 @@ public class MediatorSistema {
     private final ModuloEvento moduloEvento;
     private final ModuloSubmissaoArtigo moduloSubmissao;
     private final ServicoNotificacao servicoNotificacao;
+    private final DistribuicaoService distribuicaoService;
 
     public MediatorSistema(ModuloCadastroPesquisador moduloCadastro, ModuloEvento moduloEvento,
-                           ModuloSubmissaoArtigo moduloSubmissao, ServicoNotificacao servicoNotificacao) {
+                           ModuloSubmissaoArtigo moduloSubmissao, ServicoNotificacao servicoNotificacao,
+                           DistribuicaoService distribuicaoService) {
         this.moduloCadastro = moduloCadastro;
         this.moduloEvento = moduloEvento;
         this.moduloSubmissao = moduloSubmissao;
         this.servicoNotificacao = servicoNotificacao;
+        this.distribuicaoService = distribuicaoService;
 
         moduloCadastro.setMediator(this);
         moduloEvento.setMediator(this);
@@ -40,6 +45,11 @@ public class MediatorSistema {
     public Artigo submeterArtigo(String titulo, Pesquisador autor, String resumo, String nomePDF,
                                  List<AreaTematica> areasTematicas) {
         return moduloSubmissao.submeter(titulo, autor, resumo, nomePDF, areasTematicas);
+    }
+
+    public void distribuirArtigo(Artigo artigo) {
+        List<PerfilRevisor> candidatos = moduloCadastro.listarRevisores();
+        distribuicaoService.distribuir(artigo, candidatos);
     }
 
     public void iniciarEvento() {

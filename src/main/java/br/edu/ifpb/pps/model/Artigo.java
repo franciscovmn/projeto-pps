@@ -25,6 +25,13 @@ public class Artigo {
         pareceres.add(parecer);
     }
 
+    public List<Pesquisador> getAutores() {
+        List<Pesquisador> autores = new ArrayList<>();
+        autores.add(pesquisador);
+        autores.addAll(coAutores);
+        return autores;
+    }
+
     public Artigo(String id, String titulo, Pesquisador pesquisador, String resumo, String nomePDF, List<AreaTematica> areasTematicas) {
         this.Id = id;
         this.titulo = titulo;

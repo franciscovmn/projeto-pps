@@ -1,5 +1,8 @@
 package br.edu.ifpb.pps;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import br.edu.ifpb.pps.apresentacao.ApresentacaoConsole;
 import br.edu.ifpb.pps.apresentacao.ServicoApresentacao;
 import br.edu.ifpb.pps.chain.validacao.ValidadorAreaTematica;
@@ -17,12 +20,13 @@ import br.edu.ifpb.pps.modulos.ModuloEvento;
 import br.edu.ifpb.pps.modulos.ModuloSubmissaoArtigo;
 import br.edu.ifpb.pps.notificacao.EmailService;
 import br.edu.ifpb.pps.notificacao.ServicoNotificacao;
+import br.edu.ifpb.pps.observer.NotificadorRevisor;
+import br.edu.ifpb.pps.observer.RevisorConcreto;
+import br.edu.ifpb.pps.service.DistribuicaoService;
+import br.edu.ifpb.pps.strategy.distribuicao.DistribuicaoPorAfinidade;
 import br.edu.ifpb.pps.template.NotificacaoAceitacao;
 import br.edu.ifpb.pps.template.NotificacaoEmail;
 import br.edu.ifpb.pps.template.NotificacaoRejeicao;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class Main {
 
@@ -43,14 +47,22 @@ public class Main {
         cadeiaValidacao.setProximo(new ValidadorResumo())
                        .setProximo(new ValidadorAreaTematica())
                        .setProximo(new ValidadorArquivoPDF());
-        moduloSubmissao.setValidador(cadeiaValidacao);
 
-        MediatorSistema mediator = new MediatorSistema(moduloCadastro, moduloEvento, moduloSubmissao, servicoNotificacao);
+        NotificadorRevisor notificadorRevisor = new NotificadorRevisor();
+        notificadorRevisor.registrar(new RevisorConcreto());
+
+        DistribuicaoService distribuicaoService = new DistribuicaoService(
+                cadeiaValidacao,
+                new DistribuicaoPorAfinidade(),
+                notificadorRevisor);
+
+        MediatorSistema mediator = new MediatorSistema(moduloCadastro, moduloEvento, moduloSubmissao, servicoNotificacao, distribuicaoService);
 
         apresentacao.exibir("[1] Cadastro de pesquisadores");
         moduloCadastro.cadastrarPesquisador("Ana Coordenadora", "ana@ifpb.edu.br", "123", "IFPB", true);
         moduloCadastro.cadastrarPesquisador("Bruno Autor", "bruno@ifpb.edu.br", "123", "IFPB", false);
-        moduloCadastro.cadastrarPesquisador("Carla Revisora", "carla@ifpb.edu.br", "123", "UFPB", false);
+        moduloCadastro.cadastrarPesquisador("Carla Revisora", "carla@ifpb.edu.br", "123", "UFPB", false,
+                List.of(new AreaTematica("Engenharia de Software")));
         apresentacao.exibir("    Pesquisadores cadastrados: " + moduloCadastro.listarPesquisadores().size());
 
         apresentacao.exibir("\n[2] Evento e áreas temáticas");
@@ -75,7 +87,11 @@ public class Main {
                 areas);
         apresentacao.exibir("    Artigo submetido: " + artigo.getId() + " — " + artigo.getTitulo());
 
-        apresentacao.exibir("\n[5] Notificação de aceite (Template Method + envio)");
+        apresentacao.exibir("\n[5] Distribuição do artigo (Chain + Strategy + Observer)");
+        mediator.distribuirArtigo(artigo);
+        apresentacao.exibir("    Status do artigo: " + artigo.getStatusArtigo().getNome());
+
+        apresentacao.exibir("\n[6] Notificação de aceite (Template Method + envio)");
         Pesquisador coordenador = moduloCadastro.buscarPesquisadorPorEmail("ana@ifpb.edu.br");
         List<String[]> pareceresAceite = List.of(
                 new String[]{"Abordagem clara e bem fundamentada.", "Revisar a formatação das referências."},
@@ -90,7 +106,7 @@ public class Main {
                 pareceresAceite);
         mediator.notificar(autor.getEmail(), "Resultado da submissão " + artigo.getId(), aceite.gerarNotificacao());
 
-        apresentacao.exibir("\n[6] Notificação de rejeição (Template Method + envio)");
+        apresentacao.exibir("\n[7] Notificação de rejeição (Template Method + envio)");
         Artigo artigoRejeitado = mediator.submeterArtigo(
                 "Uma Nova Linguagem de Programação",
                 autor,
