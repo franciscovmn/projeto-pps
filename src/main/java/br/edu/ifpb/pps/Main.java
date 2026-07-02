@@ -8,18 +8,19 @@ import br.edu.ifpb.pps.chain.validacao.ValidadorBase;
 import br.edu.ifpb.pps.chain.validacao.ValidadorResumo;
 import br.edu.ifpb.pps.chain.validacao.ValidadorTitulo;
 import br.edu.ifpb.pps.enums.CategoriaEvento;
+import br.edu.ifpb.pps.enums.Veredito;
 import br.edu.ifpb.pps.mediator.MediatorSistema;
 import br.edu.ifpb.pps.model.AreaTematica;
 import br.edu.ifpb.pps.model.Artigo;
+import br.edu.ifpb.pps.model.Parecer;
 import br.edu.ifpb.pps.model.Pesquisador;
 import br.edu.ifpb.pps.modulos.ModuloCadastroPesquisador;
 import br.edu.ifpb.pps.modulos.ModuloEvento;
 import br.edu.ifpb.pps.modulos.ModuloSubmissaoArtigo;
 import br.edu.ifpb.pps.notificacao.EmailService;
 import br.edu.ifpb.pps.notificacao.ServicoNotificacao;
-import br.edu.ifpb.pps.template.NotificacaoAceitacao;
-import br.edu.ifpb.pps.template.NotificacaoEmail;
-import br.edu.ifpb.pps.template.NotificacaoRejeicao;
+import br.edu.ifpb.pps.state.StatusArtigo.StatusArtigoAceito;
+import br.edu.ifpb.pps.state.StatusArtigo.StatusArtigoRejeitado;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,55 +65,45 @@ public class Main {
         mediator.convidarRevisor("carla@ifpb.edu.br");
         apresentacao.exibir("    Revisores: " + moduloCadastro.listarRevisores().size());
 
-        apresentacao.exibir("\n[4] Submissão de artigo");
+        apresentacao.exibir("\n[4] Submissão de artigos");
         Pesquisador autor = moduloCadastro.buscarPesquisadorPorEmail("bruno@ifpb.edu.br");
         List<AreaTematica> areas = List.of(new AreaTematica("Engenharia de Software"));
-        Artigo artigo = mediator.submeterArtigo(
+        Artigo aceito = mediator.submeterArtigo(
                 "Padrões de Projeto na Prática",
                 autor,
                 "Um estudo sobre a aplicação de padrões GoF em sistemas acadêmicos.",
                 "padroes-na-pratica.pdf",
                 areas);
-        apresentacao.exibir("    Artigo submetido: " + artigo.getId() + " — " + artigo.getTitulo());
-
-        apresentacao.exibir("\n[5] Notificação de aceite (Template Method + envio)");
-        Pesquisador coordenador = moduloCadastro.buscarPesquisadorPorEmail("ana@ifpb.edu.br");
-        List<String[]> pareceresAceite = List.of(
-                new String[]{"Abordagem clara e bem fundamentada.", "Revisar a formatação das referências."},
-                new String[]{"Exemplos práticos relevantes.", "Ampliar a discussão dos resultados."}
-        );
-        NotificacaoEmail aceite = new NotificacaoAceitacao(
-                autor.getNome(),
-                artigo.getId(),
-                artigo.getTitulo(),
-                moduloEvento.getEventoAtual().getNome(),
-                coordenador.getNome(),
-                pareceresAceite);
-        mediator.notificar(autor.getEmail(), "Resultado da submissão " + artigo.getId(), aceite.gerarNotificacao());
-
-        apresentacao.exibir("\n[6] Notificação de rejeição (Template Method + envio)");
-        Artigo artigoRejeitado = mediator.submeterArtigo(
+        Artigo rejeitado = mediator.submeterArtigo(
                 "Uma Nova Linguagem de Programação",
                 autor,
                 "Proposta preliminar de uma linguagem de propósito geral.",
                 "nova-linguagem.pdf",
                 areas);
-        apresentacao.exibir("    Artigo submetido: " + artigoRejeitado.getId() + " — " + artigoRejeitado.getTitulo());
-        List<String[]> pareceresRejeicao = List.of(
-                new String[]{"Tema pertinente.", "Fundamentação teórica insuficiente.", "Ausência de avaliação experimental."},
-                new String[]{"Texto bem escrito.", "Contribuição pouco original."}
-        );
-        NotificacaoEmail rejeicao = new NotificacaoRejeicao(
-                autor.getNome(),
-                artigoRejeitado.getId(),
-                artigoRejeitado.getTitulo(),
-                moduloEvento.getEventoAtual().getNome(),
-                coordenador.getNome(),
-                pareceresRejeicao);
-        mediator.notificar(autor.getEmail(), "Resultado da submissão " + artigoRejeitado.getId(), rejeicao.gerarNotificacao());
+        apresentacao.exibir("    Submetidos: " + aceito.getId() + ", " + rejeitado.getId());
+
+        apresentacao.exibir("\n[5] Resultado das revisões (simulação do módulo de revisão)");
+        Pesquisador revisora = moduloCadastro.buscarPesquisadorPorEmail("carla@ifpb.edu.br");
+        aceito.setStatusArtigo(new StatusArtigoAceito(aceito));
+        aceito.adicionarParecer(new Parecer("PAR-1", aceito, revisora,
+                "Abordagem clara e bem fundamentada.", "Revisar a formatação das referências.",
+                Veredito.ACEITO, LocalDateTime.now()));
+        rejeitado.setStatusArtigo(new StatusArtigoRejeitado(rejeitado));
+        rejeitado.adicionarParecer(new Parecer("PAR-2", rejeitado, revisora,
+                "Tema pertinente.", "Fundamentação teórica insuficiente.",
+                Veredito.RECUSADO, LocalDateTime.now()));
+        apresentacao.exibir("    " + aceito.getId() + " → " + aceito.getStatusArtigo().getNome());
+        apresentacao.exibir("    " + rejeitado.getId() + " → " + rejeitado.getStatusArtigo().getNome());
+
+        apresentacao.exibir("\n[6] Notificação em massa aos autores (RF09)");
+        int notificados = mediator.notificarAutores();
+        apresentacao.exibir("    Autores notificados: " + notificados);
+
+        apresentacao.exibir("\n[7] Dashboard do evento (RF08)");
+        apresentacao.exibir(mediator.obterEstatisticasDashboard());
 
         apresentacao.exibir("\n=================================================");
-        apresentacao.exibir("  Fim da demonstração parcial");
+        apresentacao.exibir("  Fim da demonstração");
         apresentacao.exibir("=================================================");
     }
 }
